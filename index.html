@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1f1f1f; /* Altera o fundo para o tema dark */
+      color: #00ff00; /* Altera a cor do texto para verde */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #appContainer {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* Impede a barra de rolagem quando a navegação está aberta */
+    }
+
+    #header {
+      background-color: rgba(47, 47, 47, 0.8); /* Altera a cor do cabeçalho para o tema dark */
+      padding: 10px;
+      text-align: center;
+      z-index: 0; /* Garante que o cabeçalho permaneça visível acima do iframe */
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    #navButton {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      padding: 10px;
+      background-color: #00ff00; /* Altera a cor do botão de navegação para verde */
+      color: #1f1f1f; /* Altera a cor do texto do botão de navegação para escuro */
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+      z-index: 2; /* Garante que o botão de navegação permaneça visível acima do iframe */
+    }
+
+    #navigation {
+      position: absolute;
+      top: 0;
+      left: -250px; /* Inicia fora da tela */
+      width: 250px;
+      height: 100vh;
+      background-color: #333333; /* Altera a cor da aba de navegação lateral para o tema dark */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para destacar */
+      transition: left 0.10s ease;
+      z-index: 3; /* Garante que a navegação lateral permaneça visível acima do iframe */
+    }
+
+    #closeButton {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 10px;
+      background-color: #00ff00; /* Altera a cor do botão de fechar para verde */
+      color: #1f1f1f; /* Altera a cor do texto do botão de fechar para escuro */
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #content {
+      padding: 20px;
+      position: relative; /* Permite o posicionamento absoluto do iframe */
+      z-index: 1; /* Garante que o conteúdo permaneça visível acima do iframe */
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100% - -536px); /* Subtrai a altura do conteúdo do rodapé */
+      border: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0; /* Coloca o iframe atrás dos demais elementos */
+    }
+    
+    
+
+    ul {
+      list-style: none;
+      padding: 10;
+      margin: 10;
+    }
+
+    li {
+      padding: 15px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #00ff00; /* Altera a cor dos links para verde */
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #4caf50; /* Altera a cor dos links ao passar o mouse para um verde mais claro */
+    }
+    #scrollableContent {
+  overflow-y: auto;
+  height: calc(100vh - 40px); /* Altura total da tela menos a altura do cabeçalho */
+  z-index: 0; /* Garante que o rodapé permaneça visível acima do iframe */
+    }
+
+  </style>
+</head>
+<body>
+  <div id="appContainer">
+    <div id="header">
+      <h1>Manggreen404</h1>
+    </div>
+    <div id="navButton" onclick="toggleNavigation()">☰</div>
+    <div id="navigation" onclick="event.stopPropagation()">
+      <button id="closeButton" onclick="closeNavigation()">✕</button>
+      <ul>
+        <li><a href="#" onclick="loadPage('about:blank', 'Home')">HOME</a></li>
+        <li><a href="#" onclick="loadPage('https://www.brmangas.net/', 'Brmangas')">1. BR Mangás</a></li>
+        <li><a href="#" onclick="loadPage('https://mangaonline.biz/', 'Mangá Online')">2. Mangá online</a></li>
+        <li><a href="#" onclick="loadPage('https://mangananquim.com/', 'Mangá Nanquim')">3. Mangá Nanquim</a></li>
+        <li><a href="#" onclick="loadPage('  ', '  ')">  </a></li>
+
+        <!-- Adicione mais páginas conforme necessário -->
+      </ul>
+    </div>
+    <div id="scrollableContent"> <!-- Novo contêiner -->
+
+    <div id="content">
+      <h2>Bem vindo</h2>
+      <p>O Manggreen é um projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
+      <img src="https://i.pinimg.com/originals/de/5f/b9/de5fb95399b92cec6ae997f5ccfe3640.gif" alt="Descrição do GIF" style="width: 100%; margin-top: 20px;">
+      <p>Efetua-se, de forma automática, atualizações remotas de links e layout, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
+      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 100%; margin-top: 20px;">
+      <p>Aproveite a leitura ;)</p>
+      <p></p>
+      <p></p>
+      <p></p>
+      
+
+      <iframe id="iframeContainer" style="display: none;"></iframe>
+    </div>
+    
+    </div>
+  </div>
+
+  <script>
+    function toggleNavigation() {
+      const navigation = document.getElementById('navigation');
+      const currentLeft = parseInt(getComputedStyle(navigation).left);
+
+      if (currentLeft < 0) {
+        navigation.style.left = '0';
+      } else {
+        navigation.style.left = '-250px';
+      }
+    }
+
+    function closeNavigation() {
+      const navigation = document.getElementById('navigation');
+      navigation.style.left = '-250px';
+    }
+
+    function loadPage(url, pageTitle) {
+    if (pageTitle === 'Home') {
+      // Se a página for "Home", exibir o conteúdo fixo
+      document.getElementById('content').innerHTML = `
+        <h2>Bem vindo</h2>
+      <p>O Manggreen é um projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
+      <img src="https://i.pinimg.com/originals/de/5f/b9/de5fb95399b92cec6ae997f5ccfe3640.gif" alt="Descrição do GIF" style="width: 100%; margin-top: 20px;">
+      <p>Efetua-se, de forma automática, atualizações remotas de links e layout, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
+      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 100%; margin-top: 20px;">
+      <p>Aproveite a leitura ;)</p>
+        <iframe id="iframeContainer" style="display: none;"></iframe>
+      `;
+    } else {
+      // Para outras páginas, carregar o iframe
+      document.getElementById('content').innerHTML = `
+        <h2>${pageTitle}</h2>
+        <iframe id="iframeContainer" src="${url}" frameborder="0"></iframe>
+      `;
+    }
+
+    toggleNavigation();
+  }
+  </script>
+</body>
+</html>
