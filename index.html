@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     body {
       margin: 0;
@@ -20,11 +20,12 @@
     }
 
     #header {
-      background-color: rgba(47, 47, 47, 0.8); /* Altera a cor do cabeçalho para o tema dark */
-      padding: 10px;
-      text-align: center;
-      z-index: 0; /* Garante que o cabeçalho permaneça visível acima do iframe */
-    }
+    background-color: rgba(47, 47, 47, 0.8);
+    padding: 10px;
+    text-align: center;
+    z-index: 0;
+    position: relative; /* Adiciona position: relative; */
+  }
 
     h1 {
       margin: 0;
@@ -52,7 +53,6 @@
       height: 100vh;
       background-color: #333333; /* Altera a cor da aba de navegação lateral para o tema dark */
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para destacar */
-      transition: left 0.10s ease;
       z-index: 3; /* Garante que a navegação lateral permaneça visível acima do iframe */
     }
 
@@ -73,7 +73,10 @@
       position: relative; /* Permite o posicionamento absoluto do iframe */
       z-index: 1; /* Garante que o conteúdo permaneça visível acima do iframe */
     }
-
+    #content h2 {
+      text-align: center;
+    }
+    
     iframe {
       width: 100%;
       height: calc(100% - -536px); /* Subtrai a altura do conteúdo do rodapé */
@@ -106,11 +109,35 @@
       color: #4caf50; /* Altera a cor dos links ao passar o mouse para um verde mais claro */
     }
     #scrollableContent {
-  overflow-y: auto;
-  height: calc(100vh - 40px); /* Altura total da tela menos a altura do cabeçalho */
-  z-index: 0; /* Garante que o rodapé permaneça visível acima do iframe */
+    overflow-y: auto;
+    height: calc(100vh - 40px); /* Altura total da tela menos a altura do cabeçalho */
+    z-index: 0; /* Garante que o rodapé permaneça visível acima do iframe */
     }
+    #content .classesubT {
+    font-size: 120%; /* Ajuste o tamanho conforme necessário */
+}  
+    #navigation.closed {
+    transform: translateX(-250px);
+}
 
+    #navigation.open {
+    transform: translateX(0);
+}
+    #freezeIcon, #uploadIcon, #clearIcon {
+    cursor: pointer;
+    font-size: 20px;
+    position: absolute; /* Adiciona position: absolute; */
+    top: 500px; /* Ajuste conforme necessário */
+    right: 0px;      /* Ajuste conforme necessário */
+    
+  }
+  #uploadIcon {
+    right: 40px; /* Ajusta a posição horizontal */
+  }
+
+  #clearIcon {
+    right: 70px; /* Ajusta a posição horizontal */
+  }
   </style>
 </head>
 <body>
@@ -127,6 +154,15 @@
         <li><a href="#" onclick="loadPage('https://mangaonline.biz/', 'Mangá Online')">2. Mangá online</a></li>
         <li><a href="#" onclick="loadPage('https://mangananquim.com/', 'Mangá Nanquim')">3. Mangá Nanquim</a></li>
         <li><a href="#" onclick="loadPage('  ', '  ')">  </a></li>
+        
+       
+        </ul>
+    <span id="freezeIcon" onclick="saveState()">❄️</span>
+    <span id="uploadIcon" onclick="loadState()">💾</span>
+    <span id="clearIcon" onclick="clearMemory()">❌</span>
+    <span id="freezeIcon" onclick="requestStoragePermission()">❄️</span>
+
+        
 
         <!-- Adicione mais páginas conforme necessário -->
       </ul>
@@ -135,15 +171,18 @@
 
     <div id="content">
       <h2>Bem vindo</h2>
+      <h2 class="classesubT">O projeto</h2>
       <p>O Manggreen é um projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 150%; margin-top: 20px;">
+      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 150%; margin-top: 20px;" loading="lazy">
+      <h2 class="classesubT">Atualizações</h2>
       <p>Efetua-se, de forma automática, atualizações remotas de links e layout, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
-      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;">
+      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
       <p>Aproveite a leitura ;)</p>
       <p></p>
       <p></p>
       <p></p>
-      
+      </ul>
+    
 
       <iframe id="iframeContainer" style="display: none;"></iframe>
     </div>
@@ -152,16 +191,52 @@
   </div>
 
   <script>
-    function toggleNavigation() {
-      const navigation = document.getElementById('navigation');
-      const currentLeft = parseInt(getComputedStyle(navigation).left);
+     
+   function requestStoragePermission() {
+    // Simule aqui a solicitação de permissões no ambiente apropriado.
+    // Pode variar dependendo da plataforma ou framework que você está usando.
 
-      if (currentLeft < 0) {
-        navigation.style.left = '0';
-      } else {
-        navigation.style.left = '-250px';
-      }
-    }
+    // Após a permissão ser concedida, chame a função para salvar o estado em um arquivo
+    saveStateToFile();
+  }
+        function saveStateToFile() {
+    const savedState = appContainer.innerHTML;
+
+    // Converte o HTML para um blob
+    const blob = new Blob([savedState], { type: 'text/html' });
+
+    // Cria um link de download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'savedState.html';
+
+    // Adiciona o link ao corpo e simula um clique
+    document.body.appendChild(link);
+    link.click();
+
+    // Remove o link do corpo
+    document.body.removeChild(link);
+  }
+function toggleNavigation() {
+  const navigation = document.getElementById('navigation');
+  const currentLeft = parseInt(getComputedStyle(navigation).left);
+
+  // Evite cálculos desnecessários durante a animação
+  const targetLeft = currentLeft < 0 ? 0 : -250;
+
+  // Utilize transform para animações para aproveitar a aceleração por hardware
+  navigation.style.transition = 'left 0.1s ease';
+  navigation.style.left = targetLeft + 'px';
+}
+
+function closeNavigation() {
+  const navigation = document.getElementById('navigation');
+
+  // Limpe a transição após a animação para evitar bloqueios futuros
+  navigation.style.transition = '';
+  navigation.style.left = '-250px';
+}
+
 
     function closeNavigation() {
       const navigation = document.getElementById('navigation');
