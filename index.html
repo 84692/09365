@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <style>
+    <style>
     body {
       margin: 0;
       padding: 0;
+      background: url('https://i.pinimg.com/originals/3d/c3/87/3dc387151b115cf7ae0cf344b8e40eff.gif') no-repeat center center fixed; 
       background-color: #1f1f1f; /* Altera o fundo para o tema dark */
       color: #00ff00; /* Altera a cor do texto para verde */
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
+     
     #appContainer {
       position: absolute;
       width: 100vw;
@@ -19,13 +20,12 @@
       overflow: hidden; /* Impede a barra de rolagem quando a navegação está aberta */
     }
 
-    #header {
-    background-color: rgba(47, 47, 47, 0.8);
-    padding: 10px;
-    text-align: center;
-    z-index: 0;
-    position: relative; /* Adiciona position: relative; */
-  }
+    #header {    
+      background-color: rgba(47, 47, 47, 0.8); /* Altera a cor do cabeçalho para o tema dark */
+      padding: 10px;
+      text-align: center;
+      z-index: 0; /* Garante que o cabeçalho permaneça visível acima do iframe */
+    }
 
     h1 {
       margin: 0;
@@ -51,6 +51,7 @@
       left: -250px; /* Inicia fora da tela */
       width: 250px;
       height: 100vh;
+      border-radius: 10px;
       background-color: #333333; /* Altera a cor da aba de navegação lateral para o tema dark */
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para destacar */
       z-index: 3; /* Garante que a navegação lateral permaneça visível acima do iframe */
@@ -84,6 +85,7 @@
       position: absolute;
       top: 0;
       left: 0;
+      
       z-index: 0; /* Coloca o iframe atrás dos demais elementos */
     }
     
@@ -96,7 +98,7 @@
     }
 
     li {
-      padding: 15px;
+      padding: 10px;
     }
 
     a {
@@ -114,8 +116,12 @@
     z-index: 0; /* Garante que o rodapé permaneça visível acima do iframe */
     }
     #content .classesubT {
-    font-size: 120%; /* Ajuste o tamanho conforme necessário */
+    font-size: 100%; /* Ajuste o tamanho conforme necessário */
+    
 }  
+    p {
+  font-weight: (desativado) 
+}
     #navigation.closed {
     transform: translateX(-250px);
 }
@@ -123,23 +129,9 @@
     #navigation.open {
     transform: translateX(0);
 }
-    #freezeIcon, #uploadIcon, #clearIcon {
-    cursor: pointer;
-    font-size: 20px;
-    position: absolute; /* Adiciona position: absolute; */
-    top: 500px; /* Ajuste conforme necessário */
-    right: 0px;      /* Ajuste conforme necessário */
-    
-  }
-  #uploadIcon {
-    right: 40px; /* Ajusta a posição horizontal */
-  }
-
-  #clearIcon {
-    right: 70px; /* Ajusta a posição horizontal */
-  }
   </style>
 </head>
+
 <body>
   <div id="appContainer">
     <div id="header">
@@ -154,15 +146,6 @@
         <li><a href="#" onclick="loadPage('https://mangaonline.biz/', 'Mangá Online')">2. Mangá online</a></li>
         <li><a href="#" onclick="loadPage('https://mangananquim.com/', 'Mangá Nanquim')">3. Mangá Nanquim</a></li>
         <li><a href="#" onclick="loadPage('  ', '  ')">  </a></li>
-        
-       
-        </ul>
-    <span id="freezeIcon" onclick="saveState()">❄️</span>
-    <span id="uploadIcon" onclick="loadState()">💾</span>
-    <span id="clearIcon" onclick="clearMemory()">❌</span>
-    <span id="freezeIcon" onclick="requestStoragePermission()">❄️</span>
-
-        
 
         <!-- Adicione mais páginas conforme necessário -->
       </ul>
@@ -170,19 +153,20 @@
     <div id="scrollableContent"> <!-- Novo contêiner -->
 
     <div id="content">
-      <h2>Bem vindo</h2>
-      <h2 class="classesubT">O projeto</h2>
-      <p>O Manggreen é um projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 150%; margin-top: 20px;" loading="lazy">
-      <h2 class="classesubT">Atualizações</h2>
-      <p>Efetua-se, de forma automática, atualizações remotas de links e layout, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
+      <h2>Hi!</h2>
+      <h2 class="classesubT">Bem vindo! ⛩️</h2>
+      <p>Manggreen é um pequeno projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
+      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 130%; margin-top: 0px;" loading="lazy">
+      <h2 class="classesubT">Seleção de Sites</h2>
+      <p>Os melhores sites são selecionados, julgando a quantidade de anúncios e otimização.</p>
       <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
-      <p>Aproveite a leitura ;)</p>
+      <h2 class="classesubT">Atualizações</h2>
+      <p>Efetua-se, de forma remota, atualizações de código, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
+      <h2 class="classesubT">V:1.0.6</h2>
       <p></p>
       <p></p>
       <p></p>
-      </ul>
-    
+      
 
       <iframe id="iframeContainer" style="display: none;"></iframe>
     </div>
@@ -190,33 +174,72 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.14.2/uglify.min.js" integrity="sha256-VCXZcpkVUSg3Bv8Nw3GFrGfljS0MTOsE8Br2P1AkHBo=" crossorigin="anonymous"></script>
   <script>
-     
-   function requestStoragePermission() {
-    // Simule aqui a solicitação de permissões no ambiente apropriado.
-    // Pode variar dependendo da plataforma ou framework que você está usando.
+  (function() {
+    var scriptElements = document.querySelectorAll('script');
+    var combinedCode = '';
 
-    // Após a permissão ser concedida, chame a função para salvar o estado em um arquivo
-    saveStateToFile();
-  }
-        function saveStateToFile() {
-    const savedState = appContainer.innerHTML;
+    scriptElements.forEach(function(script) {
+      if (script.src) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', script.src, false);
+        xhr.send();
+        combinedCode += xhr.responseText;
+      } else {
+        combinedCode += script.innerHTML;
+      }
+    });
 
-    // Converte o HTML para um blob
-    const blob = new Blob([savedState], { type: 'text/html' });
+    var uglifiedCode = UglifyJS.minify(combinedCode).code;
 
-    // Cria um link de download
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = 'savedState.html';
+    var combinedScript = document.createElement('script');
+    combinedScript.innerHTML = uglifiedCode;
+    document.body.appendChild(combinedScript);
+  })();
+  
+    document.addEventListener("DOMContentLoaded", function() {
+    let lastKnownScrollPosition = 0;
+    let ticking = false;
 
-    // Adiciona o link ao corpo e simula um clique
-    document.body.appendChild(link);
-    link.click();
+    function handleScroll() {
+      lastKnownScrollPosition = window.scrollY;
 
-    // Remove o link do corpo
-    document.body.removeChild(link);
-  }
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          // Seu código de manipulação de rolagem aqui
+
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll);
+  });
+  
+      document.addEventListener("DOMContentLoaded", function() {
+      const gifs = [
+        "https://usagif.com/wp-content/uploads/gify/zero-two-3.gif",
+        "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif",
+        "https://usagif.com/wp-content/uploads/gify/zero-two-3.gif",
+        // Adicione mais URLs conforme necessário
+      ];
+
+      function loadGifs() {
+        gifs.forEach(function(url) {
+          const img = new Image();
+          img.src = url;
+          img.loading = "lazy"; // Opcional: Adiciona carregamento lento para melhorar o desempenho
+        });
+      }
+
+      // Chama a função para carregar os gifs
+      loadGifs();
+    });
+  
+  
 function toggleNavigation() {
   const navigation = document.getElementById('navigation');
   const currentLeft = parseInt(getComputedStyle(navigation).left);
@@ -247,12 +270,16 @@ function closeNavigation() {
     if (pageTitle === 'Home') {
       // Se a página for "Home", exibir o conteúdo fixo
       document.getElementById('content').innerHTML = `
-        <h2>Bem vindo</h2>
-      <p>O Manggreen é um projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 150%; margin-top: 20px;">
-      <p>Efetua-se, de forma automática, atualizações remotas de links e layout, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
-      <img src="https://i.pinimg.com/originals/de/5f/b9/de5fb95399b92cec6ae997f5ccfe3640.gif" alt="Descrição do GIF" style="width: 100%; margin-top: 20px;">
-      <p>Aproveite a leitura ;)</p>
+        <h2>Hi!</h2>
+      <h2 class="classesubT">Bem vindo! ⛩️</h2>
+      <p>Manggreen é um pequeno projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
+      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 130%; margin-top: 0px;" loading="lazy">
+      <h2 class="classesubT">Seleção de Sites</h2>
+      <p>Os melhores sites são selecionados, julgando a quantidade de anúncios e otimização.</p>
+      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
+      <h2 class="classesubT">Atualizações</h2>
+      <p>Efetua-se, de forma remota, atualizações de código, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
+      <h2 class="classesubT">V:1.0.6</h2>
         <iframe id="iframeContainer" style="display: none;"></iframe>
       `;
     } else {
