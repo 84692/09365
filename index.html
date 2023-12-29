@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
     body {
-      margin: 0;
-      padding: 0;
-      background: url('https://i.pinimg.com/originals/3d/c3/87/3dc387151b115cf7ae0cf344b8e40eff.gif') no-repeat center center fixed; 
-      background-color: #1f1f1f; /* Altera o fundo para o tema dark */
-      color: #00ff00; /* Altera a cor do texto para verde */
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  margin: 0;
+  padding: 0;
+  background: url('https://i.pinimg.com/originals/3d/c3/87/3dc387151b115cf7ae0cf344b8e40eff.gif') no-repeat center center fixed; 
+  background-color: #1f1f1f; /* Altera o fundo para o tema dark */
+  color: #00ff00; /* Altera a cor do texto para verde */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-size: cover; /* Adiciona esta linha para cobrir toda a tela */
+}
+
      
     #appContainer {
       position: absolute;
@@ -79,15 +81,15 @@
     }
     
     iframe {
-      width: 100%;
-      height: calc(100% - -536px); /* Subtrai a altura do conteúdo do rodapé */
-      border: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      
-      z-index: 0; /* Coloca o iframe atrás dos demais elementos */
-    }
+  width: 100%;
+  height: 100vh;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
     
     
 
