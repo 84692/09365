@@ -1,299 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft-like Game</title>
     <style>
-    body {
-  margin: 0;
-  padding: 0;
-  background: url('https://i.pinimg.com/originals/3d/c3/87/3dc387151b115cf7ae0cf344b8e40eff.gif') no-repeat center center fixed; 
-  background-color: #1f1f1f; /* Altera o fundo para o tema dark */
-  color: #00ff00; /* Altera a cor do texto para verde */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-size: cover; /* Adiciona esta linha para cobrir toda a tela */
-}
-
-     
-    #appContainer {
-      position: absolute;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden; /* Impede a barra de rolagem quando a navegação está aberta */
-    }
-
-    #header {    
-      background-color: rgba(47, 47, 47, 0.8); /* Altera a cor do cabeçalho para o tema dark */
-      padding: 10px;
-      text-align: center;
-      z-index: 0; /* Garante que o cabeçalho permaneça visível acima do iframe */
-    }
-
-    h1 {
-      margin: 0;
-    }
-
-    #navButton {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      padding: 10px;
-      background-color: #00ff00; /* Altera a cor do botão de navegação para verde */
-      color: #1f1f1f; /* Altera a cor do texto do botão de navegação para escuro */
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      outline: none;
-      z-index: 2; /* Garante que o botão de navegação permaneça visível acima do iframe */
-    }
-
-    #navigation {
-      position: absolute;
-      top: 0;
-      left: -250px; /* Inicia fora da tela */
-      width: 250px;
-      height: 100vh;
-      border-radius: 10px;
-      background-color: #333333; /* Altera a cor da aba de navegação lateral para o tema dark */
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para destacar */
-      z-index: 3; /* Garante que a navegação lateral permaneça visível acima do iframe */
-    }
-
-    #closeButton {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      padding: 10px;
-      background-color: #00ff00; /* Altera a cor do botão de fechar para verde */
-      color: #1f1f1f; /* Altera a cor do texto do botão de fechar para escuro */
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #content {
-      padding: 20px;
-      position: relative; /* Permite o posicionamento absoluto do iframe */
-      z-index: 1; /* Garante que o conteúdo permaneça visível acima do iframe */
-    }
-    #content h2 {
-      text-align: center;
-    }
-    
-    iframe {
-  width: 100%;
-  height: 100vh;
-  border: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-    
-    
-
-    ul {
-      list-style: none;
-      padding: 10;
-      margin: 10;
-    }
-
-    li {
-      padding: 10px;
-    }
-
-    a {
-      text-decoration: none;
-      color: #00ff00; /* Altera a cor dos links para verde */
-      transition: color 0.3s ease;
-    }
-
-    a:hover {
-      color: #4caf50; /* Altera a cor dos links ao passar o mouse para um verde mais claro */
-    }
-    #scrollableContent {
-    overflow-y: auto;
-    height: calc(100vh - 40px); /* Altura total da tela menos a altura do cabeçalho */
-    z-index: 0; /* Garante que o rodapé permaneça visível acima do iframe */
-    }
-    #content .classesubT {
-    font-size: 100%; /* Ajuste o tamanho conforme necessário */
-    
-}  
-    p {
-  font-weight: (desativado) 
-}
-    #navigation.closed {
-    transform: translateX(-250px);
-}
-
-    #navigation.open {
-    transform: translateX(0);
-}
-  </style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        #controls { position: fixed; }
+        #moveButton, #jumpButton {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            position: absolute;
+        }
+        #moveButton { bottom: 100px; left: 50px; }
+        #jumpButton { bottom: 100px; left: 270px; }
+    </style>
 </head>
-
 <body>
-  <div id="appContainer">
-    <div id="header">
-      <h1>Manggreen404</h1>
-    </div>
-    <div id="navButton" onclick="toggleNavigation()">☰</div>
-    <div id="navigation" onclick="event.stopPropagation()">
-      <button id="closeButton" onclick="closeNavigation()">✕</button>
-      <ul>
-        <li><a href="#" onclick="loadPage('about:blank', 'Home')">HOME</a></li>
-        <li><a href="#" onclick="loadPage('https://www.brmangas.net/', 'Brmangas')">1. BR Mangás</a></li>
-        <li><a href="#" onclick="loadPage('https://mangaonline.biz/', 'Mangá Online')">2. Mangá online</a></li>
-        <li><a href="#" onclick="loadPage('https://mangananquim.com/', 'Mangá Nanquim')">3. Mangá Nanquim</a></li>
-        <li><a href="#" onclick="loadPage('  ', '  ')">  </a></li>
 
-        <!-- Adicione mais páginas conforme necessário -->
-      </ul>
-    </div>
-    <div id="scrollableContent"> <!-- Novo contêiner -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
 
-    <div id="content">
-      <h2>Hi!</h2>
-      <h2 class="classesubT">Bem vindo! ⛩️</h2>
-      <p>Manggreen é um pequeno projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 130%; margin-top: 0px;" loading="lazy">
-      <h2 class="classesubT">Seleção de Sites</h2>
-      <p>Os melhores sites são selecionados, julgando a quantidade de anúncios e otimização.</p>
-      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
-      <h2 class="classesubT">Atualizações</h2>
-      <p>Efetua-se, de forma remota, atualizações de código, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
-      <h2 class="classesubT">V:1.0.6</h2>
-      <p></p>
-      <p></p>
-      <p></p>
-      
+    <script>
+        window.onload = function() {
+            // Configuração do motor Babylon.js
+            const canvas = document.createElement("canvas");
+            document.body.appendChild(canvas);
+            const engine = new BABYLON.Engine(canvas, true);
 
-      <iframe id="iframeContainer" style="display: none;"></iframe>
-    </div>
-    
-    </div>
-  </div>
+            // Criação da cena
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.14.2/uglify.min.js" integrity="sha256-VCXZcpkVUSg3Bv8Nw3GFrGfljS0MTOsE8Br2P1AkHBo=" crossorigin="anonymous"></script>
-  <script>
-  (function() {
-    var scriptElements = document.querySelectorAll('script');
-    var combinedCode = '';
+            // Criação da câmera
+            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 1, -5), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+            camera.attachControl(canvas, true);
 
-    scriptElements.forEach(function(script) {
-      if (script.src) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', script.src, false);
-        xhr.send();
-        combinedCode += xhr.responseText;
-      } else {
-        combinedCode += script.innerHTML;
-      }
-    });
+            // Criação da luz
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.7;
 
-    var uglifiedCode = UglifyJS.minify(combinedCode).code;
+            // Criação de blocos para o chão com a textura desejada
+            const groundBlocks = [];
 
-    var combinedScript = document.createElement('script');
-    combinedScript.innerHTML = uglifiedCode;
-    document.body.appendChild(combinedScript);
-  })();
-  
-    document.addEventListener("DOMContentLoaded", function() {
-    let lastKnownScrollPosition = 0;
-    let ticking = false;
+            const texture = new BABYLON.Texture("https://www.designi.com.br/images/preview/10635512.jpg", scene);
+            
+            for (let x = -15; x <= 15; x++) {
+                for (let z = -15; z <= 15; z++) {
+                    const block = BABYLON.MeshBuilder.CreateBox(`block_${x}_${z}`, { size: 1 }, scene);
+                    block.position = new BABYLON.Vector3(x, -1, z);
+                    
+                    // Aplicar textura
+                    const material = new BABYLON.StandardMaterial("textureMaterial", scene);
+                    material.diffuseTexture = texture;
+                    block.material = material;
 
-    function handleScroll() {
-      lastKnownScrollPosition = window.scrollY;
+                    groundBlocks.push(block);
+                }
+            }
 
-      if (!ticking) {
-        window.requestAnimationFrame(function() {
-          // Seu código de manipulação de rolagem aqui
+            // Criação dos botões de movimento e pulo
+            const controlsDiv = document.createElement("div");
+            controlsDiv.id = "controls";
+            document.body.appendChild(controlsDiv);
 
-          ticking = false;
-        });
+            const moveButton = document.createElement("button");
+            moveButton.id = "moveButton";
+            moveButton.addEventListener("touchstart", onMoveButtonClick);
+            moveButton.addEventListener("touchend", stopMoving);
+            controlsDiv.appendChild(moveButton);
 
-        ticking = true;
-      }
-    }
+            const jumpButton = document.createElement("button");
+            jumpButton.id = "jumpButton";
+            jumpButton.addEventListener("touchstart", jump);
+            controlsDiv.appendChild(jumpButton);
 
-    window.addEventListener("scroll", handleScroll);
-  });
-  
-      document.addEventListener("DOMContentLoaded", function() {
-      const gifs = [
-        "https://usagif.com/wp-content/uploads/gify/zero-two-3.gif",
-        "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif",
-        "https://usagif.com/wp-content/uploads/gify/zero-two-3.gif",
-        // Adicione mais URLs conforme necessário
-      ];
+            let isMoving = false;
+            let isJumping = false;
+            let clickCount = 0;
 
-      function loadGifs() {
-        gifs.forEach(function(url) {
-          const img = new Image();
-          img.src = url;
-          img.loading = "lazy"; // Opcional: Adiciona carregamento lento para melhorar o desempenho
-        });
-      }
+            function onMoveButtonClick() {
+                isMoving = true;
+            }
 
-      // Chama a função para carregar os gifs
-      loadGifs();
-    });
-  
-  
-function toggleNavigation() {
-  const navigation = document.getElementById('navigation');
-  const currentLeft = parseInt(getComputedStyle(navigation).left);
+            function jump() {
+                if (!isJumping) {
+                    isJumping = true;
+                    const initialY = camera.position.y;
 
-  // Evite cálculos desnecessários durante a animação
-  const targetLeft = currentLeft < 0 ? 0 : -250;
+                    // Animação de pulo suave
+                    BABYLON.Animation.CreateAndStartAnimation("jumpAnimation", camera, "position.y", 60, 30, initialY, initialY + 1, 0, null, () => {
+                        // Ao completar a animação, retorne à posição original
+                        BABYLON.Animation.CreateAndStartAnimation("jumpAnimation", camera, "position.y", 60, 30, camera.position.y, initialY, 0, null, () => {
+                            isJumping = false;
+                        });
+                    });
+                }
+            }
 
-  // Utilize transform para animações para aproveitar a aceleração por hardware
-  navigation.style.transition = 'left 0.1s ease';
-  navigation.style.left = targetLeft + 'px';
-}
+            function stopMoving() {
+                isMoving = false;
+            }
 
-function closeNavigation() {
-  const navigation = document.getElementById('navigation');
+            // Gravidade
+            scene.registerBeforeRender(() => {
+                if (camera.position.y > 1) {
+                    // Aplica a gravidade
+                    camera.position.y -= 0.03;
+                } else if (camera.position.y < 1) {
+                    // Mantém a câmera no chão
+                    camera.position.y = 1;
+                }
+            });
 
-  // Limpe a transição após a animação para evitar bloqueios futuros
-  navigation.style.transition = '';
-  navigation.style.left = '-250px';
-}
+            // Atualização da cena
+            engine.runRenderLoop(() => {
+                scene.render();
 
+                if (isMoving) {
+                    const forwardVector = new BABYLON.Vector3(
+                        Math.sin(camera.rotation.y),
+                        0,
+                        Math.cos(camera.rotation.y)
+                    );
 
-    function closeNavigation() {
-      const navigation = document.getElementById('navigation');
-      navigation.style.left = '-250px';
-    }
+                    camera.position.addInPlace(forwardVector.scale(0.05));
+                }
+            });
 
-    function loadPage(url, pageTitle) {
-    if (pageTitle === 'Home') {
-      // Se a página for "Home", exibir o conteúdo fixo
-      document.getElementById('content').innerHTML = `
-        <h2>Hi!</h2>
-      <h2 class="classesubT">Bem vindo! ⛩️</h2>
-      <p>Manggreen é um pequeno projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 130%; margin-top: 0px;" loading="lazy">
-      <h2 class="classesubT">Seleção de Sites</h2>
-      <p>Os melhores sites são selecionados, julgando a quantidade de anúncios e otimização.</p>
-      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
-      <h2 class="classesubT">Atualizações</h2>
-      <p>Efetua-se, de forma remota, atualizações de código, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
-      <h2 class="classesubT">V:1.0.6</h2>
-        <iframe id="iframeContainer" style="display: none;"></iframe>
-      `;
-    } else {
-      // Para outras páginas, carregar o iframe
-      document.getElementById('content').innerHTML = `
-        <h2>${pageTitle}</h2>
-        <iframe id="iframeContainer" src="${url}" frameborder="0"></iframe>
-      `;
-    }
+            // Atualização da janela ao redimensionar
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
 
-    toggleNavigation();
-  }
-  </script>
+                engine.resize();
+            });
+
+            // Inicializa o tamanho do canvas
+            window.dispatchEvent(new Event('resize'));
+        };
+    </script>
 </body>
 </html>
