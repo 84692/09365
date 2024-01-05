@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detecção Facial v1.0.7</title>
+    <title>Detecção Facial v1.0.8</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.23.0"></script>
@@ -11,9 +11,17 @@
 <body style="margin: 0; overflow: hidden;">
     <video id="video" width="100%" height="100%" autoplay playsinline></video>
 
+    <canvas id="canvas" style="position: absolute; top: 0; left: 0;"></canvas>
+
+    <footer style="position: fixed; bottom: 0; width: 100%; background-color: #333; color: white; text-align: center; padding: 10px;">
+        <p>Versão 1.0.8</p>
+    </footer>
+
     <script>
         $(document).ready(async function () {
             const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -21,9 +29,6 @@
 
                 video.addEventListener('loadeddata', async () => {
                     await video.play(); // Garante que o vídeo está sendo reproduzido
-
-                    const canvas = faceapi.createCanvasFromMedia(video);
-                    document.body.append(canvas);
 
                     const displaySize = { width: video.width, height: video.height };
                     faceapi.matchDimensions(canvas, displaySize);
@@ -33,8 +38,11 @@
                             .withFaceLandmarks()
                             .withFaceDescriptors();
 
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+
                         const resizedDetections = faceapi.resizeResults(detections, displaySize);
-                        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+
+                        // Adiciona um quadrado de detecção ao redor do rosto
                         faceapi.draw.drawDetections(canvas, resizedDetections);
                         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
                     }, 100);
