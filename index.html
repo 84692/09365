@@ -3,25 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detecção Facial v1.0.8</title>
+    <title>Detecção Facial v1.1.1</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.23.0"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #video, #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas {
+            background: transparent;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #no-face-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: red;
+            display: none;
+        }
+    </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <video id="video" width="100%" height="100%" autoplay playsinline></video>
+<body>
+    <video id="video" autoplay playsinline></video>
 
-    <canvas id="canvas" style="position: absolute; top: 0; left: 0;"></canvas>
+    <canvas id="canvas"></canvas>
 
-    <footer style="position: fixed; bottom: 0; width: 100%; background-color: #333; color: white; text-align: center; padding: 10px;">
-        <p>Versão 1.0.8</p>
+    <footer>
+        <p>Versão 1.1.1</p>
     </footer>
+
+    <div id="no-face-indicator">Nenhum rosto detectado</div>
 
     <script>
         $(document).ready(async function () {
             const video = document.getElementById('video');
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
+            const noFaceIndicator = document.getElementById('no-face-indicator');
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -40,11 +81,18 @@
 
                         context.clearRect(0, 0, canvas.width, canvas.height);
 
-                        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                        if (detections.length > 0) {
+                            noFaceIndicator.style.display = 'none';
 
-                        // Adiciona um quadrado de detecção ao redor do rosto
-                        faceapi.draw.drawDetections(canvas, resizedDetections);
-                        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                            const resizedDetections = faceapi.resizeResults(detections, displaySize);
+
+                            // Adiciona um quadrado de detecção ao redor do rosto
+                            faceapi.draw.drawDetections(canvas, resizedDetections);
+                            faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                        } else {
+                            // Exibe o indicador visual de nenhum rosto detectado
+                            noFaceIndicator.style.display = 'block';
+                        }
                     }, 100);
                 });
             } catch (error) {
