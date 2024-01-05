@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detecção Facial v1.0.3</title>
+    <title>Detecção Facial v1.0.4</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.23.0"></script>
 </head>
 <body>
-    <h1>Detecção Facial</h1>
+    <h1>Detecção Facial 4</h1>
 
     <button id="startCamera">Iniciar Câmera</button>
 
@@ -24,13 +24,9 @@
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
 
-            await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/models');
-            await faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/models');
-            await faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/models');
-
             startButton.addEventListener('click', async () => {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                     video.srcObject = stream;
 
                     await video.play(); // Garante que o vídeo está sendo reproduzido
