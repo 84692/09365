@@ -1,229 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-  <style> body {padding: 0; margin: 0; background-color: #8B0000;} </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Firebase</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        input, button {
+            margin-bottom: 10px;
+            padding: 8px;
+        }
+    </style>
 </head>
 <body>
-  <button onclick="toggleVisibility()">Visibilidade das conexões (on/off)</button>
-  <script>
-    let creatures = [];
-    let tremorIntensity = 0.0;
-    let lineVisible = true;
-    let flockingActive = false;
-    let maxDistance = 35;
 
-    function setup() {
-      createCanvas(400, 550);
-      setTimeout(() => {
-        flockingActive = true;
-        setTimeout(() => {
-          flockingActive = false;
-        }, random(1, 2) * 5);
-      }, 1 * 1);
-    }
+<form id="userForm">
+    <label for="name">Nome:</label>
+    <input type="text" id="name" required>
 
-    function draw() {
-      background(0);
+    <label for="age">Idade:</label>
+    <input type="number" id="age" required>
 
-      for (let i = 0; i < creatures.length; i++) {
-        creatures[i].display();
-        creatures[i].swim();
-        creatures[i].checkWallCollision();
-        creatures[i].establishConnections(creatures);
-        if (lineVisible) {
-          creatures[i].displayConnections();
-        }
-        creatures[i].approachConnectedCreatures();
-        if (lineVisible) {
-          creatures[i].displayConnections();
-        }
-        creatures[i].randomSpeedChange();
-        creatures[i].returnToDefaultSpeed();
-        creatures[i].schoolingBehavior();
-        creatures[i].flockingEffect();
-        creatures[i].repelNearbyCreatures(creatures);
-      }
-    }
+    <label for="state">Estado:</label>
+    <input type="text" id="state" required>
 
-    function mousePressed() {
-      let newCreature = new Creature(mouseX, mouseY);
-      creatures.push(newCreature);
-    }
+    <button type="button" onclick="enviarDados()">Enviar</button>
+</form>
 
-    function toggleVisibility() {
-      lineVisible = !lineVisible;
-    }
+<script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-database.js"></script>
 
-    class Creature {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = 1; // Adjust size as needed
-        this.direction = createVector(1, 0);
-        this.swimmingSpeed = 2;
-        this.stopPeriod = false;
-        this.randomSwimTime = random(5, 20) * 60;
-        this.stopTime = random(1, 2) * 60;
-        this.swimFrames = 0;
-        this.connections = [];
-        this.canConnect = true;
-      
-        this.speedChangeFrames = 0;
-        this.defaultSpeed = 2;
-        this.returnToDefaultSpeedTime = random(10, 20) * 60;
-        this.returnToDefaultSpeedFrames = 0;
-        this.flockTarget = createVector(random(width), random(height));
-      }
+<script>
+  // Configurações do seu projeto Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCXB5N28MgR-XVIcGzQ-KSls4wz4iHTwRk",
+    authDomain: "data-usuario.firebaseapp.com",
+    projectId: "data-usuario",
+    storageBucket: "data-usuario.appspot.com",
+    messagingSenderId: "562559374911",
+    appId: "1:562559374911:web:e31c82eedd5b9bce230a8a",
+    measurementId: "G-ZPRSS48P1Y"
+  };
 
-      display() {
-        fill(255);
-        ellipse(this.x, this.y, this.size);
-      }
+  // Inicializa o Firebase
+  const app = firebase.initializeApp(firebaseConfig);
 
-      swim() {
-        if (this.stopPeriod) {
-          this.swimFrames++;
-          if (this.swimFrames >= this.stopTime) {
-            this.stopPeriod = false;
-            this.randomSwimTime = random(5, 20) * 60;
-            this.swimFrames = 0;
-          }
-        } else {
-          if (this.swimFrames % 60 === 0 && !flockingActive) {
-            this.direction = createVector(random(-1, 1), random(-1, 1)).normalize();
-          }
+  // Referência para o nó 'users' no Realtime Database
+  const usersRef = firebase.database().ref('users');
 
-          this.x += this.direction.x * this.swimmingSpeed;
-          this.y += this.direction.y * this.swimmingSpeed;
+  function enviarDados() {
+    console.log("Enviando dados...");
 
-          this.x += random(-tremorIntensity, tremorIntensity);
-          this.y += random(-tremorIntensity, tremorIntensity);
+    // Obtém os valores dos campos do formulário
+    const name = document.getElementById('name').value;
+    const age = document.getElementById('age').value;
+    const state = document.getElementById('state').value;
 
-          this.x = constrain(this.x, 0, width);
-          this.y = constrain(this.y, 0, height);
+    // Salva os dados no Realtime Database
+    usersRef.push({
+      name: name,
+      age: age,
+      state: state
+    });
 
-          this.swimFrames++;
+    // Limpa os campos do formulário
+    document.getElementById('name').value = '';
+    document.getElementById('age').value = '';
+    document.getElementById('state').value = '';
 
-          if (this.swimFrames >= this.randomSwimTime) {
-            this.stopPeriod = true;
-            this.stopTime = random(1, 2) * 60;
-            this.swimFrames = 0;
-          }
-        }
-      }
+    alert('Dados enviados com sucesso!');
+  }
+</script>
 
-      randomSpeedChange() {
-        this.speedChangeFrames++;
-        if (this.speedChangeFrames >= this.randomSpeedChangeTime) {
-          this.swimmingSpeed = random(2, 4);
-          this.speedChangeFrames = 0;
-          this.randomSpeedChangeTime = random() 
-        }
-      }
-
-      returnToDefaultSpeed() {
-        this.returnToDefaultSpeedFrames++;
-        if (this.returnToDefaultSpeedFrames >= this.returnToDefaultSpeedTime) {
-          this.swimmingSpeed = this.defaultSpeed;
-          this.returnToDefaultSpeedFrames = 0;
-          this.returnToDefaultSpeedTime = random() 
-        }
-      }
-
-      establishConnections(otherCreatures) {
-        this.connections = [];
-
-        if (this.canConnect) {
-          for (let i = 0; i < otherCreatures.length; i++) {
-            if (otherCreatures[i] !== this && otherCreatures[i].canConnect && this.connections.length < 6) {
-              let distance = dist(this.x, this.y, otherCreatures[i].x, otherCreatures[i].y);
-              if (distance > 10 && distance < 75) {
-                this.connections.push(otherCreatures[i]);
-                otherCreatures[i].connections.push(this);
-              }
-            }
-          }
-
-          if (this.connections.length >= 1000) {
-            this.canConnect = false;
-          }
-        }
-      }
-
-      displayConnections() {
-        for (let i = 1; i < this.connections.length; i++) {
-          stroke('#FF0000');
-
-          line(this.x, this.y, this.connections[i].x, this.connections[i].y);
-        }
-      }
-
-      approachConnectedCreatures() {
-        for (let i = 0; i < this.connections.length; i++) {
-          let targetX = this.connections[i].x;
-          let targetY = this.connections[i].y;
-
-          this.x = lerp(this.x, targetX, 0.004);
-          this.y = lerp(this.y, targetY, 0.004);
-        }
-      }
-
-      checkWallCollision() {
-        if (this.x - this.size / 2 <= 0 || this.x + this.size / 2 >= width) {
-          this.direction.x *= -1;
-        }
-
-        if (this.y - this.size / 2 <= 0 || this.y + this.size / 2 >= height) {
-          this.direction.y *= -1;
-        }
-      }
-
-      flockingEffect() {
-        if (flockingActive) {
-          for (let i = 0; i < this.connections.length; i++) {
-            let distance = dist(this.x, this.y, this.connections[i].x, this.connections[i].y);
-            if (distance < 90) {
-              this.connections[i].flockTarget = this.flockTarget.copy();
-            }
-          }
-        }
-      }
-
-      schoolingBehavior() {
-        if (this.connections.length > 0) {
-          let averageX = 0;
-          let averageY = 0;
-
-          for (let i = 0; i < this.connections.length; i++) {
-            averageX += this.connections[i].x;
-            averageY += this.connections[i].y;
-          }
-
-          averageX /= this.connections.length;
-          averageY /= this.connections.length;
-
-          this.x = lerp(this.x, averageX, 0.1);
-          this.y = lerp(this.y, averageY, 0.1);
-        }
-      }
-
-      repelNearbyCreatures(otherCreatures) {
-        for (let i = 0; i < otherCreatures.length; i++) {
-          if (otherCreatures[i] !== this) {
-            let distance = dist(this.x, this.y, otherCreatures[i].x, otherCreatures[i].y);
-            if (distance < maxDistance) {
-              let repelForce = createVector(this.x - otherCreatures[i].x, this.y - otherCreatures[i].y);
-              repelForce.setMag(2.1);
-              this.x += repelForce.x;
-              this.y += repelForce.y;
-            }
-          }
-        }
-      }
-    }
-  </script>
 </body>
 </html>
