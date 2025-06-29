@@ -103,6 +103,12 @@
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
     }
+    .message.typing {
+      background: rgba(255, 255, 255, 0.1);
+      margin-right: auto;
+      font-size: 0.9em;
+      padding: 5px 10px;
+    }
     .message-input {
       display: flex;
       gap: 10px;
@@ -204,6 +210,8 @@
     let currentUser = null;
     let currentPartnerId = null;
     let lastMessageId = null;
+    let typingTimeout = null;
+    let hideTypingTimeout = null;
 
     const feedbackDiv = document.getElementById('feedback');
     const hamburger = document.getElementById('hamburger');
@@ -212,12 +220,39 @@
     const messageInput = document.getElementById('message-input');
     const messageContent = document.getElementById('message-content');
     const userIdDisplay = document.getElementById('user-id-display');
+    const messagesDiv = document.getElementById('messages');
 
     function showFeedback(message, isSuccess = false) {
       feedbackDiv.textContent = message;
       feedbackDiv.className = `feedback ${isSuccess ? 'success' : ''}`;
       setTimeout(() => feedbackDiv.textContent = '', 5000);
     }
+
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'typing-indicator';
+      typingDiv.className = 'message typing';
+      typingDiv.textContent = '...';
+      messagesDiv.appendChild(typingDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      const typingDiv = document.getElementById('typing-indicator');
+      if (typingDiv) typingDiv.remove();
+    }
+
+    messageContent.addEventListener('input', () => {
+      if (!currentPartnerId) return;
+      clearTimeout(hideTypingTimeout);
+      if (!document.getElementById('typing-indicator')) {
+        showTypingIndicator();
+      }
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        hideTypingTimeout = setTimeout(hideTypingIndicator, 1000);
+      }, 1000);
+    });
 
     hamburger.addEventListener('click', () => {
       console.log('Hambúrguer clicado');
@@ -285,6 +320,8 @@
       };
       const { data } = await supabase.from('messages').insert([message]).select();
       lastMessageId = data[0].id;
+      clearTimeout(hideTypingTimeout);
+      hideTypingIndicator();
       loadMessages();
       messageContent.value = '';
       messageContent.focus();
@@ -414,6 +451,7 @@
 
     function displayMessages(messages) {
       const messagesDiv = document.getElementById('messages');
+      const typingIndicator = document.getElementById('typing-indicator');
       messagesDiv.innerHTML = '';
       messages.forEach(msg => {
         const div = document.createElement('div');
@@ -421,6 +459,7 @@
         div.textContent = msg.content;
         messagesDiv.appendChild(div);
       });
+      if (typingIndicator) messagesDiv.appendChild(typingIndicator);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
   </script>
