@@ -30,7 +30,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #6d28d9;
+      background: #3b0764;
       padding: 10px 20px;
       border-radius: 0 0 10px 10px;
       z-index: 1000;
@@ -46,10 +46,10 @@
       position: fixed;
       top: 60px;
       right: 20px;
-      background: #6d28d9;
+      background: #3b0764;
       border-radius: 10px;
       padding: 10px;
-      border: 1px solid #a78bfa;
+      border: 1px solid #5b21b6;
       z-index: 9999999;
     }
     .menu.active {
@@ -62,7 +62,7 @@
       color: #ffffff;
     }
     .menu-item:hover {
-      background: #8b5cf6;
+      background: #5b21b6;
     }
     .conversation-starter {
       margin-bottom: 20px;
@@ -71,7 +71,7 @@
     #user-id-display {
       margin-bottom: 10px;
       cursor: pointer;
-      color: #a78bfa;
+      color: #5b21b6;
     }
     #user-id-display:hover {
       text-decoration: underline;
@@ -93,40 +93,43 @@
       border-radius: 15px;
       max-width: 70%;
       position: relative;
-      border: 1px solid #a78bfa;
+      border: 1px solid #5b21b6;
       z-index: 100;
     }
     .message.sent {
-      background: #8b5cf6;
+      background: #5b21b6;
       margin-left: auto;
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px;
     }
     .message.received {
-      background: #a78bfa;
+      background: #3b0764;
       margin-right: auto;
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
     }
     .message.typing {
-      background: #6d28d9;
+      background: #3b0764;
       margin-right: auto;
       font-size: 0.9em;
       padding: 5px 10px;
     }
     .message-input {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
+      bottom: 0;
+      left: 0;
+      right: 0;
       display: flex;
       gap: 10px;
+      padding: 10px 20px;
+      background: #121212;
       z-index: 200;
+      transition: bottom 0.3s ease;
     }
     #message-content {
       flex: 1;
       border-radius: 20px;
-      background: #6d28d9;
+      background: #3b0764;
       padding: 10px;
       color: #fff;
       border: none;
@@ -139,20 +142,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #8b5cf6;
+      background: #5b21b6;
       color: #ffffff;
     }
     #send-message:hover {
-      background: #a78bfa;
+      background: #7c3aed;
     }
     #login-form, #chat-interface {
       transition: opacity 0.3s;
     }
     .login-form {
-      background: #6d28d9;
+      background: #3b0764;
       border-radius: 15px;
       padding: 20px;
-      border: 1px solid #a78bfa;
+      border: 1px solid #5b21b6;
       text-align: center;
       z-index: 10;
     }
@@ -168,7 +171,7 @@
       color: #f87171;
     }
     .feedback.success {
-      color: #a78bfa;
+      color: #5b21b6;
     }
   </style>
 </head>
@@ -217,7 +220,6 @@
     let currentUser = null;
     let currentPartnerId = null;
     let lastMessageId = null;
-    let typingTimeout = null;
     let isTypingDisplayed = false;
 
     const feedbackDiv = document.getElementById('feedback');
@@ -268,15 +270,14 @@
 
     messageContent.addEventListener('input', () => {
       if (!currentPartnerId) return;
-      clearTimeout(typingTimeout);
       updateTypingStatus(true);
-      typingTimeout = setTimeout(() => {
+      clearTimeout(messageContent.typingTimeout);
+      messageContent.typingTimeout = setTimeout(() => {
         updateTypingStatus(false);
       }, 1000);
     });
 
     hamburger.addEventListener('click', () => {
-      console.log('Hambúrguer clicado');
       menu.classList.toggle('active');
     });
 
@@ -289,7 +290,6 @@
     });
 
     document.getElementById('disconnect').addEventListener('click', async () => {
-      console.log('Botão Desconectar clicado');
       await supabase
         .from('last_conversations')
         .delete()
@@ -310,7 +310,6 @@
     });
 
     document.getElementById('logout').addEventListener('click', async () => {
-      console.log('Botão Sair clicado');
       await supabase
         .from('typing_status')
         .delete()
@@ -506,6 +505,24 @@
       if (typingIndicator) messagesDiv.appendChild(typingIndicator);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
+
+    // Ajuste para subir a barra de digitar com o teclado
+    window.addEventListener('resize', () => {
+      const keyboardHeight = window.innerHeight - document.documentElement.clientHeight;
+      if (keyboardHeight > 0) {
+        messageInput.style.bottom = `${keyboardHeight}px`;
+      } else {
+        messageInput.style.bottom = '0';
+      }
+    });
+
+    messageContent.addEventListener('focus', () => {
+      window.scrollTo(0, 0);
+      const keyboardHeight = window.innerHeight - document.documentElement.clientHeight;
+      if (keyboardHeight > 0) {
+        messageInput.style.bottom = `${keyboardHeight}px`;
+      }
+    });
   </script>
 </body>
 </html>
