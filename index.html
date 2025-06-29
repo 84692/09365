@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App de Mensagens Futurista</title>
-  <style>
+  /
+
+<style>
     body {
       background-color: #121212;
       color: #ffffff;
@@ -211,7 +213,6 @@
     let currentPartnerId = null;
     let lastMessageId = null;
     let typingTimeout = null;
-    let hideTypingTimeout = null;
 
     const feedbackDiv = document.getElementById('feedback');
     const hamburger = document.getElementById('hamburger');
@@ -242,15 +243,24 @@
       if (typingDiv) typingDiv.remove();
     }
 
+    async function updateTypingStatus(isTyping) {
+      if (!currentPartnerId) return;
+      await supabase
+        .from('typing_status')
+        .upsert({
+          user_id: currentUser.id,
+          is_typing: isTyping,
+          partner_id: currentPartnerId,
+          updated_at: new Date().toISOString()
+        });
+    }
+
     messageContent.addEventListener('input', () => {
       if (!currentPartnerId) return;
-      clearTimeout(hideTypingTimeout);
-      if (!document.getElementById('typing-indicator')) {
-        showTypingIndicator();
-      }
       clearTimeout(typingTimeout);
+      updateTypingStatus(true);
       typingTimeout = setTimeout(() => {
-        hideTypingTimeout = setTimeout(hideTypingIndicator, 1000);
+        updateTypingStatus(false);
       }, 1000);
     });
 
@@ -273,6 +283,10 @@
         .from('last_conversations')
         .delete()
         .eq('user_id', currentUser.id);
+      await supabase
+        .from('typing_status')
+        .delete()
+        .eq('user_id', currentUser.id);
       currentPartnerId = null;
       document.getElementById('partner-id').textContent = '';
       document.getElementById('disconnect').style.display = 'none';
@@ -285,6 +299,10 @@
 
     document.getElementById('logout').addEventListener('click', async () => {
       console.log('Botão Sair clicado');
+      await supabase
+        .from('typing_status')
+        .delete()
+        .eq('user_id', currentUser.id);
       await supabase.auth.signOut();
       currentUser = null;
       currentPartnerId = null;
@@ -320,8 +338,7 @@
       };
       const { data } = await supabase.from('messages').insert([message]).select();
       lastMessageId = data[0].id;
-      clearTimeout(hideTypingTimeout);
-      hideTypingIndicator();
+      await updateTypingStatus(false);
       loadMessages();
       messageContent.value = '';
       messageContent.focus();
@@ -445,6 +462,20 @@
           (message.sender_id === currentUser.id && message.receiver_id === currentPartnerId)
         )) {
           loadMessages();
+        }
+      })
+      .subscribe();
+
+    supabase
+      .channel('public:typing_status')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'typing_status' }, payload => {
+        const { user_id, is_typing } = payload.new;
+        if (currentPartnerId && user_id === currentPartnerId && currentUser.id === payload.new.partner_id) {
+          if (is_typing) {
+            showTypingIndicator();
+          } else {
+            hideTypingIndicator();
+          }
         }
       })
       .subscribe();
