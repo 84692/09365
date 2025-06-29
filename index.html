@@ -1,299 +1,428 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App de Mensagens Futurista</title>
+  <style>
     body {
-  margin: 0;
-  padding: 0;
-  background: url('https://i.pinimg.com/originals/3d/c3/87/3dc387151b115cf7ae0cf344b8e40eff.gif') no-repeat center center fixed; 
-  background-color: #1f1f1f; /* Altera o fundo para o tema dark */
-  color: #00ff00; /* Altera a cor do texto para verde */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-size: cover; /* Adiciona esta linha para cobrir toda a tela */
-}
-
-     
-    #appContainer {
-      position: absolute;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden; /* Impede a barra de rolagem quando a navegação está aberta */
-    }
-
-    #header {    
-      background-color: rgba(47, 47, 47, 0.8); /* Altera a cor do cabeçalho para o tema dark */
-      padding: 10px;
-      text-align: center;
-      z-index: 0; /* Garante que o cabeçalho permaneça visível acima do iframe */
-    }
-
-    h1 {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
       margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+      z-index: 0;
     }
-
-    #navButton {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      padding: 10px;
-      background-color: #00ff00; /* Altera a cor do botão de navegação para verde */
-      color: #1f1f1f; /* Altera a cor do texto do botão de navegação para escuro */
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      outline: none;
-      z-index: 2; /* Garante que o botão de navegação permaneça visível acima do iframe */
-    }
-
-    #navigation {
-      position: absolute;
-      top: 0;
-      left: -250px; /* Inicia fora da tela */
-      width: 250px;
-      height: 100vh;
-      border-radius: 10px;
-      background-color: #333333; /* Altera a cor da aba de navegação lateral para o tema dark */
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para destacar */
-      z-index: 3; /* Garante que a navegação lateral permaneça visível acima do iframe */
-    }
-
-    #closeButton {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      padding: 10px;
-      background-color: #00ff00; /* Altera a cor do botão de fechar para verde */
-      color: #1f1f1f; /* Altera a cor do texto do botão de fechar para escuro */
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #content {
+    .container {
+      max-width: 800px;
+      margin: 70px auto 20px auto;
       padding: 20px;
-      position: relative; /* Permite o posicionamento absoluto do iframe */
-      z-index: 1; /* Garante que o conteúdo permaneça visível acima do iframe */
+      position: relative;
+      z-index: 10;
     }
-    #content h2 {
-      text-align: center;
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 0 0 10px 10px;
+      z-index: 1000;
     }
-    
-    iframe {
-  width: 100%;
-  height: 100vh;
-  border: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-    
-    
-
-    ul {
-      list-style: none;
-      padding: 10;
-      margin: 10;
+    .hamburger {
+      cursor: pointer;
+      font-size: 24px;
+      z-index: 9999998;
     }
-
-    li {
+    .menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
       padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 9999999;
     }
-
-    a {
-      text-decoration: none;
-      color: #00ff00; /* Altera a cor dos links para verde */
-      transition: color 0.3s ease;
+    .menu.active {
+      display: block;
     }
-
-    a:hover {
-      color: #4caf50; /* Altera a cor dos links ao passar o mouse para um verde mais claro */
+    .menu-item {
+      padding: 10px;
+      cursor: pointer;
+      pointer-events: auto;
     }
-    #scrollableContent {
-    overflow-y: auto;
-    height: calc(100vh - 40px); /* Altura total da tela menos a altura do cabeçalho */
-    z-index: 0; /* Garante que o rodapé permaneça visível acima do iframe */
+    .menu-item:hover {
+      background: rgba(255, 255, 255, 0.4);
     }
-    #content .classesubT {
-    font-size: 100%; /* Ajuste o tamanho conforme necessário */
-    
-}  
-    p {
-  font-weight: (desativado) 
-}
-    #navigation.closed {
-    transform: translateX(-250px);
-}
-
-    #navigation.open {
-    transform: translateX(0);
-}
+    .conversation-starter {
+      margin-bottom: 20px;
+      z-index: 10;
+    }
+    #user-id-display {
+      margin-bottom: 10px;
+      cursor: pointer;
+      color: #00ff99;
+    }
+    #user-id-display:hover {
+      text-decoration: underline;
+    }
+    #messages {
+      height: calc(100vh - 200px);
+      overflow-y: auto;
+      margin: 20px 0;
+      padding: 0 20px;
+      position: relative;
+      z-index: 50;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 70%;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 100;
+    }
+    .message.sent {
+      background: rgba(0, 255, 150, 0.2);
+      margin-left: auto;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+    .message.received {
+      background: rgba(0, 150, 255, 0.2);
+      margin-right: auto;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    .message-input {
+      display: flex;
+      gap: 10px;
+      position: sticky;
+      bottom: 20px;
+      padding: 0 20px;
+      z-index: 200;
+    }
+    #message-content {
+      flex: 1;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      color: #fff;
+      border: none;
+    }
+    #send-message {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    #send-message:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    #login-form, #chat-interface {
+      transition: opacity 0.3s;
+    }
+    .login-form {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-align: center;
+      z-index: 10;
+    }
+    .login-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .feedback {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #ff5555;
+    }
+    .feedback.success {
+      color: #00ff99;
+    }
   </style>
 </head>
-
 <body>
-  <div id="appContainer">
-    <div id="header">
-      <h1>Manggreen404</h1>
+  <div class="container">
+    <div id="login-form" class="login-form">
+      <label for="email">Digite seu email para login ou cadastro</label>
+      <input type="email" id="email" placeholder="Email">
+      <label for="password">Insira sua senha (mínimo 6 caracteres)</label>
+      <input type="password" id="password" placeholder="Senha">
+      <button id="login">Entrar</button>
+      <button id="signup">Criar Conta</button>
+      <div id="feedback" class="feedback"></div>
     </div>
-    <div id="navButton" onclick="toggleNavigation()">☰</div>
-    <div id="navigation" onclick="event.stopPropagation()">
-      <button id="closeButton" onclick="closeNavigation()">✕</button>
-      <ul>
-        <li><a href="#" onclick="loadPage('about:blank', 'Home')">HOME</a></li>
-        <li><a href="#" onclick="loadPage('https://www.brmangas.net/', 'Brmangas')">1. BR Mangás</a></li>
-        <li><a href="#" onclick="loadPage('https://mangaonline.biz/', 'Mangá Online')">2. Mangá online</a></li>
-        <li><a href="#" onclick="loadPage('https://mangananquim.com/', 'Mangá Nanquim')">3. Mangá Nanquim</a></li>
-        <li><a href="#" onclick="loadPage('  ', '  ')">  </a></li>
-
-        <!-- Adicione mais páginas conforme necessário -->
-      </ul>
-    </div>
-    <div id="scrollableContent"> <!-- Novo contêiner -->
-
-    <div id="content">
-      <h2>Hi!</h2>
-      <h2 class="classesubT">Bem vindo! ⛩️</h2>
-      <p>Manggreen é um pequeno projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 130%; margin-top: 0px;" loading="lazy">
-      <h2 class="classesubT">Seleção de Sites</h2>
-      <p>Os melhores sites são selecionados, julgando a quantidade de anúncios e otimização.</p>
-      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
-      <h2 class="classesubT">Atualizações</h2>
-      <p>Efetua-se, de forma remota, atualizações de código, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
-      <h2 class="classesubT">V:1.0.6</h2>
-      <p></p>
-      <p></p>
-      <p></p>
-      
-
-      <iframe id="iframeContainer" style="display: none;"></iframe>
-    </div>
-    
+    <div id="chat-interface" style="display: none;">
+      <div class="header">
+        <span>App de Mensagens</span>
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+      <div class="conversation-starter" id="conversation-starter">
+        <div id="user-id-display" style="display: none;"></div>
+        <input type="text" id="other-user-id" placeholder="ID da outra pessoa">
+        <button id="start-chat">Iniciar Conversa</button>
+      </div>
     </div>
   </div>
+  <div id="messages"></div>
+  <div class="message-input" id="message-input" style="display: none;">
+    <input type="text" id="message-content" placeholder="Digite uma mensagem">
+    <button id="send-message">→</button>
+  </div>
+  <div class="menu" id="menu">
+    <div class="menu-item" id="user-id"></div>
+    <div class="menu-item" id="partner-id"></div>
+    <div class="menu-item" id="disconnect" style="display: none;">Desconectar</div>
+    <div class="menu-item" id="logout">Sair</div>
+  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.14.2/uglify.min.js" integrity="sha256-VCXZcpkVUSg3Bv8Nw3GFrGfljS0MTOsE8Br2P1AkHBo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-  (function() {
-    var scriptElements = document.querySelectorAll('script');
-    var combinedCode = '';
+    const supabase = window.supabase.createClient(
+      'https://eolzhovnootsentzpgou.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvbHpob3Zub290c2VudHpwZ291Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTEzMzMsImV4cCI6MjA2NjcyNzMzM30.zgxoMAq5O2Cfl7tn6WEV8PP4_kIKK2xdYqUQjdfiZ5M'
+    );
 
-    scriptElements.forEach(function(script) {
-      if (script.src) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', script.src, false);
-        xhr.send();
-        combinedCode += xhr.responseText;
+    let currentUser = null;
+    let currentPartnerId = null;
+    let lastMessageId = null;
+
+    const feedbackDiv = document.getElementById('feedback');
+    const hamburger = document.getElementById('hamburger');
+    const menu = document.getElementById('menu');
+    const conversationStarter = document.getElementById('conversation-starter');
+    const messageInput = document.getElementById('message-input');
+    const messageContent = document.getElementById('message-content');
+    const userIdDisplay = document.getElementById('user-id-display');
+
+    function showFeedback(message, isSuccess = false) {
+      feedbackDiv.textContent = message;
+      feedbackDiv.className = `feedback ${isSuccess ? 'success' : ''}`;
+      setTimeout(() => feedbackDiv.textContent = '', 5000);
+    }
+
+    hamburger.addEventListener('click', () => {
+      console.log('Hambúrguer clicado');
+      menu.classList.toggle('active');
+    });
+
+    userIdDisplay.addEventListener('click', () => {
+      navigator.clipboard.writeText(currentUser.id).then(() => {
+        showFeedback('ID copiado para a área de transferência!', true);
+      }).catch(() => {
+        showFeedback('Erro ao copiar ID.');
+      });
+    });
+
+    document.getElementById('disconnect').addEventListener('click', async () => {
+      console.log('Botão Desconectar clicado');
+      await supabase
+        .from('last_conversations')
+        .delete()
+        .eq('user_id', currentUser.id);
+      currentPartnerId = null;
+      document.getElementById('partner-id').textContent = '';
+      document.getElementById('disconnect').style.display = 'none';
+      conversationStarter.style.display = 'block';
+      messageInput.style.display = 'none';
+      document.getElementById('messages').innerHTML = '';
+      userIdDisplay.style.display = 'block';
+      showFeedback('Desconectado da conversa.', true);
+    });
+
+    document.getElementById('logout').addEventListener('click', async () => {
+      console.log('Botão Sair clicado');
+      await supabase.auth.signOut();
+      currentUser = null;
+      currentPartnerId = null;
+      document.getElementById('partner-id').textContent = '';
+      document.getElementById('disconnect').style.display = 'none';
+      document.getElementById('messages').innerHTML = '';
+      userIdDisplay.style.display = 'none';
+      showFeedback('Logout realizado com sucesso!', true);
+      showLoginForm();
+    });
+
+    messageContent.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        const cursorPosition = messageContent.selectionStart;
+        const text = messageContent.value;
+        messageContent.value = text.slice(0, cursorPosition) + '\n' + text.slice(cursorPosition);
+        messageContent.selectionStart = messageContent.selectionEnd = cursorPosition + 1;
+      }
+    });
+
+    document.getElementById('send-message').addEventListener('click', async () => {
+      const content = messageContent.value.trim();
+      if (!content || !currentPartnerId) {
+        showFeedback('Digite uma mensagem e selecione um contato.');
+        return;
+      }
+      const message = {
+        sender_id: currentUser.id,
+        receiver_id: currentPartnerId,
+        content,
+        created_at: new Date().toISOString()
+      };
+      const { data } = await supabase.from('messages').insert([message]).select();
+      lastMessageId = data[0].id;
+      loadMessages();
+      messageContent.value = '';
+      messageContent.focus();
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        currentUser = session.user;
+        showChatInterface();
+        loadLastConversation();
       } else {
-        combinedCode += script.innerHTML;
+        showLoginForm();
       }
     });
 
-    var uglifiedCode = UglifyJS.minify(combinedCode).code;
-
-    var combinedScript = document.createElement('script');
-    combinedScript.innerHTML = uglifiedCode;
-    document.body.appendChild(combinedScript);
-  })();
-  
-    document.addEventListener("DOMContentLoaded", function() {
-    let lastKnownScrollPosition = 0;
-    let ticking = false;
-
-    function handleScroll() {
-      lastKnownScrollPosition = window.scrollY;
-
-      if (!ticking) {
-        window.requestAnimationFrame(function() {
-          // Seu código de manipulação de rolagem aqui
-
-          ticking = false;
-        });
-
-        ticking = true;
+    async function loadLastConversation() {
+      const { data } = await supabase
+        .from('last_conversations')
+        .select('last_partner_id')
+        .eq('user_id', currentUser.id)
+        .single();
+      if (data && data.last_partner_id) {
+        currentPartnerId = data.last_partner_id;
+        document.getElementById('partner-id').textContent = `Conectado com: ${currentPartnerId}`;
+        document.getElementById('disconnect').style.display = 'block';
+        conversationStarter.style.display = 'none';
+        messageInput.style.display = 'flex';
+        userIdDisplay.style.display = 'none';
+        loadMessages();
+      } else {
+        conversationStarter.style.display = 'block';
+        messageInput.style.display = 'none';
+        userIdDisplay.style.display = 'block';
+        userIdDisplay.textContent = `Seu ID: ${currentUser.id} (clique para copiar)`;
       }
     }
 
-    window.addEventListener("scroll", handleScroll);
-  });
-  
-      document.addEventListener("DOMContentLoaded", function() {
-      const gifs = [
-        "https://usagif.com/wp-content/uploads/gify/zero-two-3.gif",
-        "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif",
-        "https://usagif.com/wp-content/uploads/gify/zero-two-3.gif",
-        // Adicione mais URLs conforme necessário
-      ];
+    async function loadMessages() {
+      if (!currentPartnerId) return;
+      const { data } = await supabase
+        .from('messages')
+        .select('*')
+        .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${currentPartnerId}),and(sender_id.eq.${currentPartnerId},receiver_id.eq.${currentUser.id})`)
+        .order('created_at', { ascending: true });
+      displayMessages(data);
+    }
 
-      function loadGifs() {
-        gifs.forEach(function(url) {
-          const img = new Image();
-          img.src = url;
-          img.loading = "lazy"; // Opcional: Adiciona carregamento lento para melhorar o desempenho
-        });
+    function showLoginForm() {
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('chat-interface').style.display = 'none';
+      userIdDisplay.style.display = 'none';
+    }
+
+    function showChatInterface() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('chat-interface').style.display = 'block';
+      document.getElementById('user-id').textContent = `Seu ID: ${currentUser.id}`;
+    }
+
+    document.getElementById('signup').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!email || !password || password.length < 6) {
+        showFeedback('Preencha email e senha (mínimo 6 caracteres).');
+        return;
       }
-
-      // Chama a função para carregar os gifs
-      loadGifs();
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        showFeedback(`Erro ao cadastrar: ${error.message}`);
+      } else {
+        showFeedback('Usuário cadastrado! Faça login.', true);
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+      }
     });
-  
-  
-function toggleNavigation() {
-  const navigation = document.getElementById('navigation');
-  const currentLeft = parseInt(getComputedStyle(navigation).left);
 
-  // Evite cálculos desnecessários durante a animação
-  const targetLeft = currentLeft < 0 ? 0 : -250;
+    document.getElementById('login').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!email || !password) {
+        showFeedback('Preencha email e senha.');
+        return;
+      }
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        showFeedback(`Erro ao fazer login: ${error.message}`);
+      } else {
+        currentUser = data.user;
+        showFeedback('Login realizado com sucesso!', true);
+        showChatInterface();
+        loadLastConversation();
+      }
+    });
 
-  // Utilize transform para animações para aproveitar a aceleração por hardware
-  navigation.style.transition = 'left 0.1s ease';
-  navigation.style.left = targetLeft + 'px';
-}
+    document.getElementById('start-chat').addEventListener('click', async () => {
+      const newPartnerId = document.getElementById('other-user-id').value.trim();
+      if (!newPartnerId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(newPartnerId) || newPartnerId === currentUser.id) {
+        showFeedback('Digite um ID válido (UUID) diferente do seu.');
+        return;
+      }
+      currentPartnerId = newPartnerId;
+      await supabase
+        .from('last_conversations')
+        .upsert({ user_id: currentUser.id, last_partner_id: currentPartnerId, updated_at: new Date().toISOString() });
+      document.getElementById('partner-id').textContent = `Conectado com: ${currentPartnerId}`;
+      document.getElementById('disconnect').style.display = 'block';
+      conversationStarter.style.display = 'none';
+      messageInput.style.display = 'flex';
+      userIdDisplay.style.display = 'none';
+      document.getElementById('other-user-id').value = '';
+      loadMessages();
+      showFeedback('Conversa iniciada com sucesso!', true);
+    });
 
-function closeNavigation() {
-  const navigation = document.getElementById('navigation');
+    supabase
+      .channel('public:messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+        const message = payload.new;
+        if (message.id !== lastMessageId && (
+          (message.sender_id === currentPartnerId && message.receiver_id === currentUser.id) ||
+          (message.sender_id === currentUser.id && message.receiver_id === currentPartnerId)
+        )) {
+          loadMessages();
+        }
+      })
+      .subscribe();
 
-  // Limpe a transição após a animação para evitar bloqueios futuros
-  navigation.style.transition = '';
-  navigation.style.left = '-250px';
-}
-
-
-    function closeNavigation() {
-      const navigation = document.getElementById('navigation');
-      navigation.style.left = '-250px';
+    function displayMessages(messages) {
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML = '';
+      messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = `message ${msg.sender_id === currentUser.id ? 'sent' : 'received'}`;
+        div.textContent = msg.content;
+        messagesDiv.appendChild(div);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-
-    function loadPage(url, pageTitle) {
-    if (pageTitle === 'Home') {
-      // Se a página for "Home", exibir o conteúdo fixo
-      document.getElementById('content').innerHTML = `
-        <h2>Hi!</h2>
-      <h2 class="classesubT">Bem vindo! ⛩️</h2>
-      <p>Manggreen é um pequeno projeto sem fins lucrativos que visa indexar sites de mangá, facilitando o acesso e leitura.</p>
-      <img src="https://usagif.com/wp-content/uploads/gify/zero-two-3.gif" alt="Descrição do GIF" style="width: 130%; margin-top: 0px;" loading="lazy">
-      <h2 class="classesubT">Seleção de Sites</h2>
-      <p>Os melhores sites são selecionados, julgando a quantidade de anúncios e otimização.</p>
-      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXloamU1YnlqZTVubjV5ZTk3bWs3NXl2cHE5cnk4Y2tpMTlzNnNycSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Oqk1q3Ne6KfXCkBbSv/giphy.gif" alt="Descrição do GIF" style="width: 100%; margin-top: -130px;" loading="lazy">
-      <h2 class="classesubT">Atualizações</h2>
-      <p>Efetua-se, de forma remota, atualizações de código, dispensando a necessidade de atualizar manualmente o arquivo APK.</p>
-      <h2 class="classesubT">V:1.0.6</h2>
-        <iframe id="iframeContainer" style="display: none;"></iframe>
-      `;
-    } else {
-      // Para outras páginas, carregar o iframe
-      document.getElementById('content').innerHTML = `
-        <h2>${pageTitle}</h2>
-        <iframe id="iframeContainer" src="${url}" frameborder="0"></iframe>
-      `;
-    }
-
-    toggleNavigation();
-  }
   </script>
 </body>
 </html>
