@@ -403,7 +403,7 @@
       .channel('public:messages')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
         const message = payload.new;
-        if (message.id !== lastMessageId && (
+        if (currentPartnerId && message.id !== lastMessageId && (
           (message.sender_id === currentPartnerId && message.receiver_id === currentUser.id) ||
           (message.sender_id === currentUser.id && message.receiver_id === currentPartnerId)
         )) {
