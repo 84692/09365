@@ -30,7 +30,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.1);
+      background: #6d28d9;
       padding: 10px 20px;
       border-radius: 0 0 10px 10px;
       z-index: 1000;
@@ -39,16 +39,17 @@
       cursor: pointer;
       font-size: 24px;
       z-index: 9999998;
+      color: #ffffff;
     }
     .menu {
       display: none;
       position: fixed;
       top: 60px;
       right: 20px;
-      background: rgba(255, 255, 255, 0.3);
+      background: #6d28d9;
       border-radius: 10px;
       padding: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid #a78bfa;
       z-index: 9999999;
     }
     .menu.active {
@@ -58,9 +59,10 @@
       padding: 10px;
       cursor: pointer;
       pointer-events: auto;
+      color: #ffffff;
     }
     .menu-item:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: #8b5cf6;
     }
     .conversation-starter {
       margin-bottom: 20px;
@@ -69,7 +71,7 @@
     #user-id-display {
       margin-bottom: 10px;
       cursor: pointer;
-      color: #00ff99;
+      color: #a78bfa;
     }
     #user-id-display:hover {
       text-decoration: underline;
@@ -91,23 +93,23 @@
       border-radius: 15px;
       max-width: 70%;
       position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid #a78bfa;
       z-index: 100;
     }
     .message.sent {
-      background: rgba(0, 255, 150, 0.2);
+      background: #8b5cf6;
       margin-left: auto;
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px;
     }
     .message.received {
-      background: rgba(0, 150, 255, 0.2);
+      background: #a78bfa;
       margin-right: auto;
       border-top-left-radius: 5px;
       border-bottom-left-radius: 5px;
     }
     .message.typing {
-      background: rgba(255, 255, 255, 0.1);
+      background: #6d28d9;
       margin-right: auto;
       font-size: 0.9em;
       padding: 5px 10px;
@@ -124,7 +126,7 @@
     #message-content {
       flex: 1;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.1);
+      background: #6d28d9;
       padding: 10px;
       color: #fff;
       border: none;
@@ -137,19 +139,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.1);
+      background: #8b5cf6;
+      color: #ffffff;
     }
     #send-message:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: #a78bfa;
     }
     #login-form, #chat-interface {
       transition: opacity 0.3s;
     }
     .login-form {
-      background: rgba(255, 255, 255, 0.05);
+      background: #6d28d9;
       border-radius: 15px;
       padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid #a78bfa;
       text-align: center;
       z-index: 10;
     }
@@ -157,15 +160,15 @@
       display: block;
       margin-bottom: 5px;
       font-size: 0.9em;
-      color: rgba(255, 255, 255, 0.8);
+      color: #ffffff;
     }
     .feedback {
       margin-top: 10px;
       font-size: 0.9em;
-      color: #ff5555;
+      color: #f87171;
     }
     .feedback.success {
-      color: #00ff99;
+      color: #a78bfa;
     }
   </style>
 </head>
@@ -349,9 +352,9 @@
       const { data } = await supabase.from('messages').insert([message]).select();
       lastMessageId = data[0].id;
       await updateTypingStatus(false);
-      loadMessages();
       messageContent.value = '';
-      messageContent.focus();
+      loadMessages();
+      messageContent.focus(); // Mantém o foco para evitar fechamento do teclado
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
