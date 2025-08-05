@@ -2,23 +2,48 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Visualizador HTML</title>
+  <title>Visualizador Multi-Link</title>
   <style>
     html, body, iframe {
       margin: 0; padding: 0; height: 100%; width: 100%; border: none; overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+    }
+    #toolbar {
+      padding: 0.5rem;
+      background: #222;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #444;
+      border: none;
+      color: #eee;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #666;
+    }
+    iframe {
+      flex-grow: 1;
+      border: none;
+      background: white;
     }
   </style>
 </head>
 <body>
+  <div id="toolbar">
+    <button onclick="carregarPagina('p1')">Página 1</button>
+    <button onclick="carregarPagina('p2')">Página 2</button>
+  </div>
   <iframe id="viewer" sandbox="allow-scripts allow-same-origin"></iframe>
-  <script>
-    fetch('https://aubvkzfranufvkoevazg.supabase.co/storage/v1/object/public/public-html/index.html')
-      .then(r => r.text())
-      .then(html => {
-        const blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }))
-        document.getElementById('viewer').src = blobUrl
-      })
-      .catch(e => document.body.textContent = 'Erro: ' + e.message)
-  </script>
+  <script src="linksViewer.js"></script>
 </body>
 </html>
