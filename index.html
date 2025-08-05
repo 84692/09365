@@ -1,111 +1,43 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizador HTML Supabase</title>
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      background: black; color: white;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+    #container {
+      width: 90vw; height: 90vh;
+      background: white; color: black;
+      overflow: auto;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Visualizador HTML do Supabase Storage</h1>
+  <div id="container">Carregando...</div>
 
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
+  <script>
+    const url = 'https://aubvkzfranufvkoevazg.supabase.co/storage/v1/object/public/public-html/index.html'
 
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script>```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Hacker Text Display</title>
-       <style>
-           body {
-               background-color: #000;
-               display: flex;
-               justify-content: center;
-               align-items: center;
-               height: 100vh;
-               margin: 0;
-               font-family: 'Courier New', Courier, monospace;
-           }
-           textarea {
-               background-color: #000;
-               color: #0f0;
-               border: 2px solid #0f0;
-               width: 80%;
-               height: 80%;
-               resize: none;
-               padding: 10px;
-               font-size: 16px;
-               outline: none;
-               box-shadow: 0 0 10px #0f0;
-           }
-       </style>
-   </head>
-   <body>
-       <textarea id="display" readonly></textarea>
-       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-       <script>
-           const SUPABASE_URL = 'https://aubvkzfranufvkoevazg.supabase.co';
-           const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1YnZremZyYW51ZnZrb2V2YXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNzUwMDEsImV4cCI6MjA2Nzc1MTAwMX0.-yXUpxY-8XNVaM-QQ9faA2N8taWIAxV-lfXKQj8BIKc';
-           const display = document.getElementById('display');
-
-           // Initialize Supabase client
-           const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-           // Fetch initial messages
-           async function fetchInitialMessages() {
-               try {
-                   const { data: messages, error } = await supabase
-                       .from('messages')
-                       .select('content, created_at')
-                       .order('created_at', { ascending: false });
-                   if (error) throw error;
-                   display.value = messages.map(msg => `[${new Date(msg.created_at).toLocaleString()}] ${msg.content}`).join('\n');
-               } catch (error) {
-                   console.error('Error fetching initial messages:', error);
-                   display.value = 'Error loading messages...';
-               }
-           }
-
-           // Subscribe to new messages
-           supabase
-               .channel('public:messages')
-               .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-                   const newMessage = `[${new Date(payload.new.created_at).toLocaleString()}] ${payload.new.content}\n${display.value}`;
-                   display.value = newMessage;
-               })
-               .subscribe();
-
-           // Load initial messages
-           fetchInitialMessages();
-       </script>
-   </body>
-   </html>
-   ```
+    fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error('Falha ao carregar o arquivo')
+        return res.text()
+      })
+      .then(html => {
+        // Injeta o conteúdo do HTML no container
+        document.getElementById('container').innerHTML = html
+      })
+      .catch(err => {
+        document.getElementById('container').innerText = 'Erro: ' + err.message
+      })
+  </script>
+</body>
+</html>
